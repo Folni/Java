@@ -51,14 +51,12 @@ public interface Repository {
     
     void deleteUser(int id) throws Exception;
     
-    Optional<User> selectUser(int id) throws Exception;
-
-    List<User> selectUsers() throws Exception;
+    int checkUser(User user) throws Exception;
     
     /*Contributor crud*/
-    void InsertArticleContributor(int id, Person data) throws Exception;
+    void insertArticleContributor(int id, int personID) throws Exception;
     
-    void DeleteArticleContributor(int ArticleID, int PersonID) throws Exception;
+    void deleteArticleContributor(int articleID, int personID) throws Exception;
     
     List<Person> getArticleContributors(int id) throws Exception;
 }

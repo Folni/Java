@@ -42,6 +42,7 @@ public class SqlRepository implements Repository {
     private static final String PWDHASH = "PwdHash";
     private static final String PWDSALT = "PwdSalt";
     private static final String ISADMIN = "IsAdmin";
+    private static final String PERSONID = "PersonID";
     
     /*Article crud const*/
     private static final String CREATE_ARTICLE = "{ CALL createArticle (?,?,?,?,?,?,?,?) }";
@@ -58,11 +59,17 @@ public class SqlRepository implements Repository {
     private static final String SELECT_PEOPLE = "{ CALL selectPeople }";
     
     /*User crud const*/
-    private static final String CREATE_USER = "{ CALL createUser (?,?,?,?,?) }";
-    private static final String UPDATE_USER = "{ CALL updateUser (?,?,?,?,?) }";
+    private static final String CREATE_USER = "{ CALL createUser (?,?,?,?,?,?) }";
+    private static final String UPDATE_USER = "{ CALL updateUser (?,?,?,?,?,?) }";
     private static final String DELETE_USER = "{ CALL deleteUser (?) }";
     private static final String SELECT_USER = "{ CALL selectUser (?) }";
     private static final String SELECT_USERS = "{ CALL selectUsers }";
+    private static final String CHECK_USER = "{ CALL checkUser (?,?,?,?) }";
+    
+    /*ArticleContributor crud const*/
+    private static final String INSERTARTICLECONTRIBUTOR = "{ CALL insertArticleContributor (?,?) }";
+    private static final String DELETEARTICLECONTRIBUTOR = "{ CALL deleteArticleContributor (?,?) }";
+    private static final String GETARTICLECONTRIBUTORS = "{ CALL getArticleContributors (?) }";
 
     @Override
     public int createArticle(Article article) throws Exception {
@@ -147,10 +154,10 @@ public class SqlRepository implements Repository {
                             rs.getString(TITLE),
                             rs.getString(LINK),
                             rs.getString(DESCRIPTION),
-                            LocalDateTime.parse(rs.getString(PUBLISHED_DATE), Article.DATE_FORMATTER)),
+                            LocalDateTime.parse(rs.getString(PUBLISHED_DATE), Article.DATE_FORMATTER),
                             rs.getString(CREATOR),
                             rs.getString(PICTURE_PATH),
-                            rs.getString(CONTENT));
+                            rs.getString(CONTENT)));
                 }
             }
         }
@@ -164,16 +171,18 @@ public class SqlRepository implements Repository {
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_ARTICLES); 
                 ResultSet rs = stmt.executeQuery()) {
 
+            //    public Article(int id, String title, String link, String description, LocalDateTime publishedDate, String creator, String picturePath, String content) {
+
             while (rs.next()) {
                 articles.add(new Article(
                             rs.getInt(ID_ARTICLE),
                             rs.getString(TITLE),
                             rs.getString(LINK),
                             rs.getString(DESCRIPTION),
-                            LocalDateTime.parse(rs.getString(PUBLISHED_DATE), Article.DATE_FORMATTER)),
+                            LocalDateTime.parse(rs.getString(PUBLISHED_DATE), Article.DATE_FORMATTER),
                             rs.getString(CREATOR),
                             rs.getString(PICTURE_PATH),
-                            rs.getString(CONTENT));
+                            rs.getString(CONTENT)));
             }
         }
         return articles;
@@ -285,7 +294,8 @@ public class SqlRepository implements Repository {
             stmt.setString(USERNAME, user.getUsername());
             stmt.setString(PWDHASH, user.getPwdHash());
             stmt.setString(PWDSALT, user.getPwdSalt());
-            stmt.setString(ISADMIN, user.getIsAdmin());
+            stmt.setBoolean(ISADMIN, user.getIsAdmin());
+            stmt.setInt(PERSONID, user.getPersonID());
             
             stmt.registerOutParameter(ID_USER, Types.INTEGER);
 
@@ -296,42 +306,114 @@ public class SqlRepository implements Repository {
 
     @Override
     public void createUsers(List<User> users) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_USER)) {
+
+            for (User user : users) {
+                stmt.setString(USERNAME, user.getUsername());
+                stmt.setString(PWDHASH, user.getPwdHash());
+                stmt.setString(PWDSALT, user.getPwdSalt());
+                stmt.setBoolean(ISADMIN, user.getIsAdmin());
+                stmt.setInt(PERSONID, user.getPersonID());
+                
+                stmt.registerOutParameter(ID_USER, Types.INTEGER);
+                
+                stmt.executeUpdate();
+            }
+            
+        }
     }
 
     @Override
     public void updateUser(int id, User data) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_USER)) {
+
+            stmt.setString(USERNAME, data.getUsername());
+            stmt.setString(PWDHASH, data.getPwdHash());
+            stmt.setString(PWDSALT, data.getPwdSalt());
+            stmt.setBoolean(ISADMIN, data.getIsAdmin());
+            stmt.setInt(PERSONID, data.getPersonID());
+            
+            stmt.setInt(ID_USER, id);
+
+            stmt.executeUpdate();
+            
+            
+        }
     }
 
     @Override
     public void deleteUser(int id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(DELETE_USER)) {
+
+            stmt.setInt(ID_USER, id);
+
+            stmt.executeUpdate();
+        }
+    }
+
+
+    @Override
+    public void insertArticleContributor(int id, int personID) throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(INSERTARTICLECONTRIBUTOR)) {
+
+            stmt.setInt(ID_ARTICLE, id);
+            stmt.setInt(ID_PERSON, personID);
+            
+
+            stmt.executeUpdate();
+        }    
     }
 
     @Override
-    public Optional<User> selectUser(int id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void deleteArticleContributor(int articleID, int personID) throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(DELETEARTICLECONTRIBUTOR)) {
 
-    @Override
-    public List<User> selectUsers() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+            stmt.setInt(ID_ARTICLE, articleID);
+            stmt.setInt(ID_PERSON, personID);
 
-    @Override
-    public void InsertArticleContributor(int id, Person data) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void DeleteArticleContributor(int ArticleID, int PersonID) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            stmt.executeUpdate();
+        }
     }
 
     @Override
     public List<Person> getArticleContributors(int id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Person> people = new ArrayList<>();
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(GETARTICLECONTRIBUTORS)) {
+
+            stmt.setInt(ID_ARTICLE, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                people.add(new Person(
+                            rs.getString(NAME),
+                            rs.getString(SURNAME),
+                            rs.getString(EMAIL)));            
+                }
+            }
+        }
+        return people;
+    }
+
+    @Override
+    public int checkUser(User user) throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CHECK_USER)) {
+
+            stmt.setString(USERNAME, user.getUsername());
+            stmt.setString(PWDHASH, user.getPwdHash());
+            stmt.setString(PWDSALT, user.getPwdSalt());
+            
+            stmt.registerOutParameter(ID_USER, Types.INTEGER);
+
+            stmt.executeUpdate();
+            return stmt.getInt(ID_USER);
+        }
     }
 
 }

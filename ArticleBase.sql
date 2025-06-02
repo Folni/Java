@@ -103,7 +103,7 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE InsertArticleContributor
+CREATE PROCEDURE insertArticleContributor
     @IDArticle INT,
     @IDPerson INT
 AS
@@ -208,7 +208,7 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE DeleteArticleContributor
+CREATE PROCEDURE deleteArticleContributor
     @IDArticle INT,
     @IDPerson INT
 AS
@@ -280,14 +280,18 @@ END;
 GO
 
 CREATE PROCEDURE getArticleContributors
-    @IDArticle INT
+    @IDArticle INT,
+    @Name NVARCHAR(90) OUTPUT,
+    @Surname NVARCHAR(90) OUTPUT,
+    @Email NVARCHAR(300) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        p.Name,
-        p.Surname
+        @Name = p.Name,
+        @Surname = p.Surname,
+        @Email = p.Email
     FROM 
         Article AS a
     INNER JOIN 
@@ -299,3 +303,24 @@ BEGIN
 END;
 GO
 
+
+CREATE PROCEDURE checkUser
+    @Username NVARCHAR(50),
+    @PwdHash NVARCHAR(256),
+    @PwdSalt NVARCHAR(256),
+    @IDUser INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT @IDUser = IDUser
+    FROM User_
+    WHERE Username = @Username
+      AND PwdHash = @PwdHash
+      AND PwdSalt = @PwdSalt;
+
+    IF @IDUser IS NULL
+    BEGIN
+        SET @IDUser = -1;
+    END
+END;
