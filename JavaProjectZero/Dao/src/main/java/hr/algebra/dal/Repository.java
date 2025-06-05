@@ -32,7 +32,7 @@ public interface Repository {
     /*Person crud*/
     int createPerson(Person person) throws Exception;
     
-    void createPeople(List<Person> people) throws Exception;
+    List<Integer> createPeople(List<Person> people) throws Exception;
     
     void updatePerson(int id, Person data) throws Exception;
     
@@ -54,9 +54,9 @@ public interface Repository {
     int checkUser(User user) throws Exception;
     
     /*Contributor crud*/
-    void insertArticleContributor(int id, int personID) throws Exception;
+    void insertArticleContributor(int id, List<Integer> personID) throws Exception;
     
-    void deleteArticleContributor(int articleID, int personID) throws Exception;
+    void deleteArticleContributor(int articleID, List<Integer> personID) throws Exception;
     
     List<Person> getArticleContributors(int id) throws Exception;
 }

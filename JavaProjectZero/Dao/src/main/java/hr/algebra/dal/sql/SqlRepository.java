@@ -29,13 +29,13 @@ public class SqlRepository implements Repository {
     private static final String CREATOR = "Creator";
     private static final String PICTURE_PATH = "PicturePath";
     private static final String CONTENT = "Content";
-    
+
     /*Person const*/
     private static final String ID_PERSON = "IDPerson";
     private static final String NAME = "Name";
     private static final String SURNAME = "Surname";
     private static final String EMAIL = "Email";
-    
+
     /*User const*/
     private static final String ID_USER = "IDUser";
     private static final String USERNAME = "Username";
@@ -43,21 +43,21 @@ public class SqlRepository implements Repository {
     private static final String PWDSALT = "PwdSalt";
     private static final String ISADMIN = "IsAdmin";
     private static final String PERSONID = "PersonID";
-    
+
     /*Article crud const*/
     private static final String CREATE_ARTICLE = "{ CALL createArticle (?,?,?,?,?,?,?,?) }";
     private static final String UPDATE_ARTICLE = "{ CALL updateArticle (?,?,?,?,?,?,?,?) }";
     private static final String DELETE_ARTICLE = "{ CALL deleteArticle (?) }";
     private static final String SELECT_ARTICLE = "{ CALL selectArticle (?) }";
     private static final String SELECT_ARTICLES = "{ CALL selectArticles }";
-    
+
     /*Person crud const*/
     private static final String CREATE_PERSON = "{ CALL createPerson (?,?,?,?) }";
     private static final String UPDATE_PERSON = "{ CALL updatePerson (?,?,?,?) }";
     private static final String DELETE_PERSON = "{ CALL deletePerson (?) }";
     private static final String SELECT_PERSON = "{ CALL selectPerson (?) }";
     private static final String SELECT_PEOPLE = "{ CALL selectPeople }";
-    
+
     /*User crud const*/
     private static final String CREATE_USER = "{ CALL createUser (?,?,?,?,?,?) }";
     private static final String UPDATE_USER = "{ CALL updateUser (?,?,?,?,?,?) }";
@@ -65,7 +65,7 @@ public class SqlRepository implements Repository {
     private static final String SELECT_USER = "{ CALL selectUser (?) }";
     private static final String SELECT_USERS = "{ CALL selectUsers }";
     private static final String CHECK_USER = "{ CALL checkUser (?,?,?,?) }";
-    
+
     /*ArticleContributor crud const*/
     private static final String INSERTARTICLECONTRIBUTOR = "{ CALL insertArticleContributor (?,?) }";
     private static final String DELETEARTICLECONTRIBUTOR = "{ CALL deleteArticleContributor (?,?) }";
@@ -80,7 +80,7 @@ public class SqlRepository implements Repository {
             stmt.setString(LINK, article.getLink());
             stmt.setString(DESCRIPTION, article.getDescription());
             stmt.setString(PUBLISHED_DATE, article.getPublishedDate().format(Article.DATE_FORMATTER));
-            stmt.setString(CREATOR, article.getCreator());
+            stmt.setInt(CREATOR, article.getCreator().getId());
             stmt.setString(PICTURE_PATH, article.getPicturePath());
             stmt.setString(CONTENT, article.getContent());
             stmt.registerOutParameter(ID_ARTICLE, Types.INTEGER);
@@ -100,11 +100,11 @@ public class SqlRepository implements Repository {
                 stmt.setString(LINK, article.getLink());
                 stmt.setString(DESCRIPTION, article.getDescription());
                 stmt.setString(PUBLISHED_DATE, article.getPublishedDate().format(Article.DATE_FORMATTER));
-                stmt.setString(CREATOR, article.getCreator());
+                stmt.setInt(CREATOR, article.getCreator().getId());
                 stmt.setString(PICTURE_PATH, article.getPicturePath());
                 stmt.setString(CONTENT, article.getContent());
                 stmt.registerOutParameter(ID_ARTICLE, Types.INTEGER);
-                
+
                 stmt.executeUpdate();
             }
         }
@@ -119,13 +119,13 @@ public class SqlRepository implements Repository {
             stmt.setString(LINK, article.getLink());
             stmt.setString(DESCRIPTION, article.getDescription());
             stmt.setString(PUBLISHED_DATE, article.getPublishedDate().format(Article.DATE_FORMATTER));
-            stmt.setString(CREATOR, article.getCreator());
+            stmt.setInt(CREATOR, article.getCreator().getId());
             stmt.setString(PICTURE_PATH, article.getPicturePath());
             stmt.setString(CONTENT, article.getContent());
             stmt.setInt(ID_ARTICLE, id);
 
             stmt.executeUpdate();
-            
+
         }
     }
 
@@ -147,17 +147,21 @@ public class SqlRepository implements Repository {
 
             stmt.setInt(ID_ARTICLE, id);
             try (ResultSet rs = stmt.executeQuery()) {
-
                 if (rs.next()) {
+                    int creatorId = rs.getInt(CREATOR);
+                    Person creator = selectPerson(creatorId)
+                            .orElseThrow(() -> new Exception("Creator not found with ID: " + creatorId));
+
                     return Optional.of(new Article(
                             rs.getInt(ID_ARTICLE),
                             rs.getString(TITLE),
                             rs.getString(LINK),
                             rs.getString(DESCRIPTION),
                             LocalDateTime.parse(rs.getString(PUBLISHED_DATE), Article.DATE_FORMATTER),
-                            rs.getString(CREATOR),
+                            creator,
                             rs.getString(PICTURE_PATH),
-                            rs.getString(CONTENT)));
+                            rs.getString(CONTENT)
+                    ));
                 }
             }
         }
@@ -168,21 +172,23 @@ public class SqlRepository implements Repository {
     public List<Article> selectArticles() throws Exception {
         List<Article> articles = new ArrayList<>();
         DataSource dataSource = DataSourceSingleton.getInstance();
-        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_ARTICLES); 
-                ResultSet rs = stmt.executeQuery()) {
-
-            //    public Article(int id, String title, String link, String description, LocalDateTime publishedDate, String creator, String picturePath, String content) {
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_ARTICLES); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+                int creatorId = rs.getInt(CREATOR);
+                Person creator = selectPerson(creatorId)
+                        .orElseThrow(() -> new Exception("Creator not found with ID: " + creatorId));
+
                 articles.add(new Article(
-                            rs.getInt(ID_ARTICLE),
-                            rs.getString(TITLE),
-                            rs.getString(LINK),
-                            rs.getString(DESCRIPTION),
-                            LocalDateTime.parse(rs.getString(PUBLISHED_DATE), Article.DATE_FORMATTER),
-                            rs.getString(CREATOR),
-                            rs.getString(PICTURE_PATH),
-                            rs.getString(CONTENT)));
+                        rs.getInt(ID_ARTICLE),
+                        rs.getString(TITLE),
+                        rs.getString(LINK),
+                        rs.getString(DESCRIPTION),
+                        LocalDateTime.parse(rs.getString(PUBLISHED_DATE), Article.DATE_FORMATTER),
+                        creator,
+                        rs.getString(PICTURE_PATH),
+                        rs.getString(CONTENT)
+                ));
             }
         }
         return articles;
@@ -196,7 +202,7 @@ public class SqlRepository implements Repository {
             stmt.setString(NAME, person.getName());
             stmt.setString(SURNAME, person.getSurname());
             stmt.setString(EMAIL, person.getEmail());
-            
+
             stmt.registerOutParameter(ID_PERSON, Types.INTEGER);
 
             stmt.executeUpdate();
@@ -204,22 +210,27 @@ public class SqlRepository implements Repository {
         }
     }
 
+   
     @Override
-    public void createPeople(List<Person> people) throws Exception {
+    public List<Integer> createPeople(List<Person> people) throws Exception {
+        List<Integer> ids = new ArrayList<>();
         DataSource dataSource = DataSourceSingleton.getInstance();
+
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_PERSON)) {
 
             for (Person person : people) {
                 stmt.setString(NAME, person.getName());
                 stmt.setString(SURNAME, person.getSurname());
                 stmt.setString(EMAIL, person.getEmail());
-                
-                stmt.registerOutParameter(ID_PERSON, Types.INTEGER);
-                
-                stmt.executeUpdate();
+
+                stmt.registerOutParameter(ID_PERSON, Types.INTEGER); 
+                stmt.executeUpdate(); 
+                int id = stmt.getInt(ID_PERSON); 
+                ids.add(id); 
             }
-            
         }
+
+        return ids;
     }
 
     @Override
@@ -230,11 +241,11 @@ public class SqlRepository implements Repository {
             stmt.setString(NAME, data.getName());
             stmt.setString(SURNAME, data.getSurname());
             stmt.setString(EMAIL, data.getEmail());
-            
+
             stmt.setInt(ID_PERSON, id);
 
             stmt.executeUpdate();
-            
+
         }
     }
 
@@ -273,15 +284,15 @@ public class SqlRepository implements Repository {
     public List<Person> selectPeople() throws Exception {
         List<Person> people = new ArrayList<>();
         DataSource dataSource = DataSourceSingleton.getInstance();
-        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_PERSON); 
-                ResultSet rs = stmt.executeQuery()) {
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_PERSON); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 people.add(new Person(
-                            rs.getInt(ID_PERSON),
-                            rs.getString(NAME),
-                            rs.getString(SURNAME),
-                            rs.getString(EMAIL)));            }
+                        rs.getInt(ID_PERSON),
+                        rs.getString(NAME),
+                        rs.getString(SURNAME),
+                        rs.getString(EMAIL)));
+            }
         }
         return people;
     }
@@ -296,7 +307,7 @@ public class SqlRepository implements Repository {
             stmt.setString(PWDSALT, user.getPwdSalt());
             stmt.setBoolean(ISADMIN, user.getIsAdmin());
             stmt.setInt(PERSONID, user.getPersonID());
-            
+
             stmt.registerOutParameter(ID_USER, Types.INTEGER);
 
             stmt.executeUpdate();
@@ -315,12 +326,12 @@ public class SqlRepository implements Repository {
                 stmt.setString(PWDSALT, user.getPwdSalt());
                 stmt.setBoolean(ISADMIN, user.getIsAdmin());
                 stmt.setInt(PERSONID, user.getPersonID());
-                
+
                 stmt.registerOutParameter(ID_USER, Types.INTEGER);
-                
+
                 stmt.executeUpdate();
             }
-            
+
         }
     }
 
@@ -334,12 +345,11 @@ public class SqlRepository implements Repository {
             stmt.setString(PWDSALT, data.getPwdSalt());
             stmt.setBoolean(ISADMIN, data.getIsAdmin());
             stmt.setInt(PERSONID, data.getPersonID());
-            
+
             stmt.setInt(ID_USER, id);
 
             stmt.executeUpdate();
-            
-            
+
         }
     }
 
@@ -354,29 +364,29 @@ public class SqlRepository implements Repository {
         }
     }
 
-
     @Override
-    public void insertArticleContributor(int id, int personID) throws Exception {
+    public void insertArticleContributor(int id, List<Integer> personID) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(INSERTARTICLECONTRIBUTOR)) {
 
+            for (Integer personId : personID) {
             stmt.setInt(ID_ARTICLE, id);
-            stmt.setInt(ID_PERSON, personID);
-            
-
+            stmt.setInt(ID_PERSON, personId);
             stmt.executeUpdate();
-        }    
+            }
+        }
     }
 
     @Override
-    public void deleteArticleContributor(int articleID, int personID) throws Exception {
+    public void deleteArticleContributor(int articleID, List<Integer> personID) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(DELETEARTICLECONTRIBUTOR)) {
 
+            for (Integer personId : personID) {
             stmt.setInt(ID_ARTICLE, articleID);
-            stmt.setInt(ID_PERSON, personID);
-
+            stmt.setInt(ID_PERSON, personId);
             stmt.executeUpdate();
+            }
         }
     }
 
@@ -390,10 +400,10 @@ public class SqlRepository implements Repository {
             try (ResultSet rs = stmt.executeQuery()) {
 
                 while (rs.next()) {
-                people.add(new Person(
+                    people.add(new Person(
                             rs.getString(NAME),
                             rs.getString(SURNAME),
-                            rs.getString(EMAIL)));            
+                            rs.getString(EMAIL)));
                 }
             }
         }
@@ -408,7 +418,7 @@ public class SqlRepository implements Repository {
             stmt.setString(USERNAME, user.getUsername());
             stmt.setString(PWDHASH, user.getPwdHash());
             stmt.setString(PWDSALT, user.getPwdSalt());
-            
+
             stmt.registerOutParameter(ID_USER, Types.INTEGER);
 
             stmt.executeUpdate();

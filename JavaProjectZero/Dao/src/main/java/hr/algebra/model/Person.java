@@ -27,6 +27,11 @@ public final class Person {
         this.surname = surname;
         this.email = email;
     }
+    
+    public Person(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
 
     public Person() {
     }
@@ -65,7 +70,7 @@ public final class Person {
 
     @Override
     public String toString() {
-        return "Person{" + "name=" + name + ", surname=" + surname + ", email=" + email + '}';
+        return  name + " " + surname;
     }
     
     

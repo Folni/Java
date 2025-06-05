@@ -6,6 +6,7 @@ package hr.algebra.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  *
@@ -20,11 +21,20 @@ public final class Article {
     private String link;
     private String description;
     private LocalDateTime publishedDate;
-    private String creator;
+    private Person creator;
+    private List<Person> contributors;
     private String picturePath;
     private String content;
 
-    public Article(int id, String title, String link, String description, LocalDateTime publishedDate, String creator, String picturePath, String content) {
+    public List<Person> getContributors() {
+        return contributors;
+    }
+
+    public void setContributors(List<Person> contributors) {
+        this.contributors = contributors;
+    }
+    
+    public Article(int id, String title, String link, String description, LocalDateTime publishedDate, Person creator, String picturePath, String content) {
         this.id = id;
         this.title = title;
         this.link = link;
@@ -35,7 +45,7 @@ public final class Article {
         this.content = content;
     }
 
-    public Article(String title, String link, String description, LocalDateTime publishedDate, String creator, String picturePath, String content) {
+    public Article(String title, String link, String description, LocalDateTime publishedDate, Person creator, String picturePath, String content) {
         this.title = title;
         this.link = link;
         this.description = description;
@@ -88,11 +98,11 @@ public final class Article {
         this.publishedDate = publishedDate;
     }
 
-    public String getCreator() {
+    public Person getCreator() {
         return creator;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(Person creator) {
         this.creator = creator;
     }
 

@@ -44,12 +44,5 @@ public class PasswordUtils {
 
         return new HashSalt(hashBase64, saltBase64);
     }
-
-    // Example usage
-    public static void main(String[] args) throws Exception {
-        HashSalt result = hashPassword("myPassword123");
-        System.out.println("Hash: " + result.hash);
-        System.out.println("Salt: " + result.salt);
-    }
 }
 
