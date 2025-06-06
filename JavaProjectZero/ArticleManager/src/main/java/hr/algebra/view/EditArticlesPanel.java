@@ -378,8 +378,8 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                 for (Person person : people) {
                     if (person.getName().equalsIgnoreCase(inputName)
                             && person.getSurname().equalsIgnoreCase(inputSurname)) {
-
                         creator = person;
+                        break;
                     } else {
                         Person newPerson = new Person(inputName, inputSurname);
                         int idPerson = repository.createPerson(newPerson);
@@ -527,8 +527,8 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                 for (Person person : people) {
                     if (person.getName().equalsIgnoreCase(inputName)
                             && person.getSurname().equalsIgnoreCase(inputSurname)) {
-
                         selectedArticle.setCreator(person);
+                        break;
                     } else {
                         Person newPerson = new Person(inputName, inputSurname);
                         int idPerson = repository.createPerson(newPerson);
@@ -539,7 +539,6 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                 }
             }
 
-            
             /* Contributor check */
             String contributorsText = tfContributors.getText().trim();
 
@@ -586,24 +585,19 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                     .collect(Collectors.toList()));
             allNewIds.addAll(newContributorIds);
 
-
             List<Integer> toRemove = new ArrayList<>(existingContributorIds);
             toRemove.removeAll(allNewIds);
 
-
             List<Integer> toAdd = new ArrayList<>(allNewIds);
             toAdd.removeAll(existingContributorIds);
-
 
             if (!toRemove.isEmpty()) {
                 repository.deleteArticleContributor(selectedArticle.getId(), toRemove);
             }
 
-
             if (!toAdd.isEmpty()) {
                 repository.insertArticleContributor(selectedArticle.getId(), toAdd);
             }
-
 
             List<Person> finalContributors = new ArrayList<>();
 
@@ -815,6 +809,7 @@ public class EditArticlesPanel extends javax.swing.JPanel {
     }
 
     private void fillForm(Article article) {
+        clearForm();
         tfTitle.setText(article.getTitle());
         tfLink.setText(article.getLink());
         tfPublishDate.setText(article.getPublishedDate().format(Article.DATE_FORMATTER));
@@ -828,8 +823,14 @@ public class EditArticlesPanel extends javax.swing.JPanel {
         tfContributors.setText(contributorsStr);
         taDescription.setText(article.getDescription());
         taContent.setText(article.getContent());
-        tfPicturePath.setText(article.getPicturePath());
+        if (article.getPicturePath().isEmpty()) {
+            tfPicturePath.setText("");
+            lbIcon.setIcon(null);
+        }
 
-        setIcon(lbIcon, new File(article.getPicturePath()));
+        else{
+            tfPicturePath.setText(article.getPicturePath());
+            setIcon(lbIcon, new File(article.getPicturePath()));
+        }
     }
 }

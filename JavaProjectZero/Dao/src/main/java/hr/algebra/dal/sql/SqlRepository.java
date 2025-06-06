@@ -14,7 +14,10 @@ import java.sql.ResultSet;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 
@@ -91,8 +94,10 @@ public class SqlRepository implements Repository {
     }
 
     @Override
-    public void createArticles(List<Article> articles) throws Exception {
+    public Map<Integer, List<Integer>> createArticles(List<Article> articles) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
+        Map<Integer, List<Integer>> dictionary = new HashMap<>();
+
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_ARTICLE)) {
 
             for (Article article : articles) {
@@ -100,14 +105,42 @@ public class SqlRepository implements Repository {
                 stmt.setString(LINK, article.getLink());
                 stmt.setString(DESCRIPTION, article.getDescription());
                 stmt.setString(PUBLISHED_DATE, article.getPublishedDate().format(Article.DATE_FORMATTER));
-                stmt.setInt(CREATOR, article.getCreator().getId());
+
+                if (article.getCreator() != null) {
+                    stmt.setInt(CREATOR, article.getCreator().getId());
+                } else {
+                    stmt.setInt(CREATOR, 2); // Default creator ID
+                }
+
                 stmt.setString(PICTURE_PATH, article.getPicturePath());
                 stmt.setString(CONTENT, article.getContent());
+
                 stmt.registerOutParameter(ID_ARTICLE, Types.INTEGER);
 
                 stmt.executeUpdate();
+
+                int generatedArticleId = stmt.getInt(ID_ARTICLE);
+
+                List<Person> people = article.getContributors();
+
+                if (people == null || people.isEmpty()) {
+                    // No contributors — skip or continue
+                } else {
+                    List<Integer> contributorIds = new ArrayList<>();
+                    for (Person person : people) {
+                        if (person != null) {
+                            contributorIds.add(person.getId());
+                        }
+                    }
+                    if (!contributorIds.isEmpty()) {
+                        dictionary.put(generatedArticleId, contributorIds);
+                    }
+                }
+
             }
         }
+
+        return dictionary;
     }
 
     @Override
@@ -210,7 +243,6 @@ public class SqlRepository implements Repository {
         }
     }
 
-   
     @Override
     public List<Integer> createPeople(List<Person> people) throws Exception {
         List<Integer> ids = new ArrayList<>();
@@ -223,10 +255,10 @@ public class SqlRepository implements Repository {
                 stmt.setString(SURNAME, person.getSurname());
                 stmt.setString(EMAIL, person.getEmail());
 
-                stmt.registerOutParameter(ID_PERSON, Types.INTEGER); 
-                stmt.executeUpdate(); 
-                int id = stmt.getInt(ID_PERSON); 
-                ids.add(id); 
+                stmt.registerOutParameter(ID_PERSON, Types.INTEGER);
+                stmt.executeUpdate();
+                int id = stmt.getInt(ID_PERSON);
+                ids.add(id);
             }
         }
 
@@ -370,9 +402,9 @@ public class SqlRepository implements Repository {
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(INSERTARTICLECONTRIBUTOR)) {
 
             for (Integer personId : personID) {
-            stmt.setInt(ID_ARTICLE, id);
-            stmt.setInt(ID_PERSON, personId);
-            stmt.executeUpdate();
+                stmt.setInt(ID_ARTICLE, id);
+                stmt.setInt(ID_PERSON, personId);
+                stmt.executeUpdate();
             }
         }
     }
@@ -383,9 +415,9 @@ public class SqlRepository implements Repository {
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(DELETEARTICLECONTRIBUTOR)) {
 
             for (Integer personId : personID) {
-            stmt.setInt(ID_ARTICLE, articleID);
-            stmt.setInt(ID_PERSON, personId);
-            stmt.executeUpdate();
+                stmt.setInt(ID_ARTICLE, articleID);
+                stmt.setInt(ID_PERSON, personId);
+                stmt.executeUpdate();
             }
         }
     }

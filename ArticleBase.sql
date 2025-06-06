@@ -280,26 +280,22 @@ END;
 GO
 
 CREATE PROCEDURE getArticleContributors
-    @IDArticle INT,
-    @Name NVARCHAR(90) OUTPUT,
-    @Surname NVARCHAR(90) OUTPUT,
-    @Email NVARCHAR(300) OUTPUT
+    @IDArticle INT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        @Name = p.Name,
-        @Surname = p.Surname,
-        @Email = p.Email
+        p.IDPerson,
+        p.Name,
+        p.Surname,
+        p.Email
     FROM 
-        Article AS a
+        ArticleContributor ac
     INNER JOIN 
-        ArticleContributor AS ac ON a.IDArticle = ac.IDArticle
-    INNER JOIN 
-        Person AS p ON ac.IDPerson = p.IDPerson
+        Person p ON ac.IDPerson = p.IDPerson
     WHERE 
-        a.IDArticle = @IDArticle;
+        ac.IDArticle = @IDArticle;
 END;
 GO
 
@@ -324,3 +320,9 @@ BEGIN
         SET @IDUser = -1;
     END
 END;
+GO
+
+/*Generate Admin*/
+insert into Person (Name,Surname,Email) values ('Admin', 'Admin', 'admin@algebra.hr')
+insert into Person (Name,Surname,Email) values ('John', 'Doe', 'jdoe@algebra.hr')
+

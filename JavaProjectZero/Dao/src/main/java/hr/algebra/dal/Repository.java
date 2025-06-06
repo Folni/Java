@@ -8,6 +8,7 @@ import hr.algebra.model.Article;
 import hr.algebra.model.Person;
 import hr.algebra.model.User;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -19,7 +20,7 @@ public interface Repository {
     /*Article crud*/
     int createArticle(Article article) throws Exception;
 
-    void createArticles(List<Article> articles) throws Exception;
+    Map<Integer, List<Integer>> createArticles(List<Article> articles) throws Exception;
 
     void updateArticle(int id, Article data) throws Exception;
 

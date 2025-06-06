@@ -33,6 +33,15 @@ public final class Article {
     public void setContributors(List<Person> contributors) {
         this.contributors = contributors;
     }
+
+    public Article(String title, String link, String description, LocalDateTime publishedDate, String picturePath, String content) {
+        this.title = title;
+        this.link = link;
+        this.description = description;
+        this.publishedDate = publishedDate;
+        this.picturePath = picturePath;
+        this.content = content;
+    }
     
     public Article(int id, String title, String link, String description, LocalDateTime publishedDate, Person creator, String picturePath, String content) {
         this.id = id;
