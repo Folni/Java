@@ -49,21 +49,21 @@ public class SqlRepository implements Repository {
     private static final String UPDATE_ARTICLE = "{ CALL updateArticle (?,?,?,?,?,?,?,?) }";
     private static final String DELETE_ARTICLE = "{ CALL deleteArticle (?) }";
     private static final String SELECT_ARTICLE = "{ CALL selectArticle (?) }";
-    private static final String SELECT_ARTICLES = "{ CALL selectArticles }";
+    private static final String SELECT_ARTICLES = "{ CALL selectArticles () }";
 
     /*Person crud const*/
     private static final String CREATE_PERSON = "{ CALL createPerson (?,?,?,?) }";
     private static final String UPDATE_PERSON = "{ CALL updatePerson (?,?,?,?) }";
     private static final String DELETE_PERSON = "{ CALL deletePerson (?) }";
     private static final String SELECT_PERSON = "{ CALL selectPerson (?) }";
-    private static final String SELECT_PEOPLE = "{ CALL selectPeople }";
+    private static final String SELECT_PEOPLE = "{ CALL selectPeople () }";
 
     /*User crud const*/
     private static final String CREATE_USER = "{ CALL createUser (?,?,?,?,?,?) }";
     private static final String UPDATE_USER = "{ CALL updateUser (?,?,?,?,?,?) }";
     private static final String DELETE_USER = "{ CALL deleteUser (?) }";
     private static final String SELECT_USER = "{ CALL selectUser (?) }";
-    private static final String SELECT_USERS = "{ CALL selectUsers }";
+    private static final String SELECT_USERS = "{ CALL selectUsers () }";
     private static final String CHECK_USER = "{ CALL checkUser (?,?,?,?) }";
 
     /*ArticleContributor crud const*/
@@ -284,7 +284,7 @@ public class SqlRepository implements Repository {
     public List<Person> selectPeople() throws Exception {
         List<Person> people = new ArrayList<>();
         DataSource dataSource = DataSourceSingleton.getInstance();
-        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_PERSON); ResultSet rs = stmt.executeQuery()) {
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(SELECT_PEOPLE); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 people.add(new Person(
@@ -401,6 +401,7 @@ public class SqlRepository implements Repository {
 
                 while (rs.next()) {
                     people.add(new Person(
+                            rs.getInt(ID_PERSON),
                             rs.getString(NAME),
                             rs.getString(SURNAME),
                             rs.getString(EMAIL)));

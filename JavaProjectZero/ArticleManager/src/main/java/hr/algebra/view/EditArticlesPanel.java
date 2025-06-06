@@ -74,13 +74,15 @@ public class EditArticlesPanel extends javax.swing.JPanel {
         tfContributors = new javax.swing.JTextField();
         lbDescriptionError = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        taDescription = new javax.swing.JTextField();
-        taContent = new javax.swing.JTextField();
         lbContentError = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taContent = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        taDescription = new javax.swing.JTextArea();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
@@ -183,6 +185,18 @@ public class EditArticlesPanel extends javax.swing.JPanel {
             }
         });
 
+        taContent.setColumns(20);
+        taContent.setLineWrap(true);
+        taContent.setRows(5);
+        jScrollPane2.setViewportView(taContent);
+
+        jScrollPane3.setWheelScrollingEnabled(false);
+
+        taDescription.setColumns(20);
+        taDescription.setLineWrap(true);
+        taDescription.setRows(5);
+        jScrollPane3.setViewportView(taDescription);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -193,20 +207,17 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(84, 84, 84)
-                                .addComponent(tfTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lbTitleError))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(455, 455, 455))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addGap(84, 84, 84)
                                     .addComponent(tfLink, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(18, 18, 18)
-                                    .addComponent(lbLinkError)))
+                                    .addComponent(lbLinkError))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(455, 455, 455)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -235,37 +246,41 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                                     .addGap(18, 18, 18)
                                     .addComponent(lbContributorsError)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(taDescription)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane3))
+                                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addComponent(lbDescriptionError)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lbDescriptionError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lbContentError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
                         .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(taContent, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnAdd)
+                                .addGap(62, 62, 62)
+                                .addComponent(btnUpdate)
+                                .addGap(55, 55, 55)
+                                .addComponent(btnDelete))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(84, 84, 84)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lbContentError)
-                                        .addGap(0, 0, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lbPicturePathError)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(tfPicturePath, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(btnAdd)
-                                        .addGap(62, 62, 62)
-                                        .addComponent(btnUpdate)
-                                        .addGap(55, 55, 55)
-                                        .addComponent(btnDelete))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 636, Short.MAX_VALUE)
-                                .addComponent(lbPicturePathError)
-                                .addGap(18, 18, 18)
-                                .addComponent(tfPicturePath, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(tfTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lbTitleError, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
                         .addGap(18, 18, 18)
                         .addComponent(btnChoose)))
                 .addContainerGap())
@@ -273,17 +288,16 @@ public class EditArticlesPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tfTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lbTitleError))
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbTitleError))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -308,40 +322,34 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                                 .addComponent(tfContributors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lbContributorsError))
                             .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lbDescriptionError)
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(taDescription)))))
+                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbDescriptionError)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(btnChoose)
                                     .addComponent(tfPicturePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lbPicturePathError)))
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
+                                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnAdd)
-                                .addComponent(btnUpdate))
+                            .addComponent(btnAdd)
+                            .addComponent(btnUpdate)
                             .addComponent(btnDelete))
-                        .addGap(0, 49, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lbContentError)
+                        .addGap(175, 175, 175))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbContentError)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(taContent))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -349,6 +357,7 @@ public class EditArticlesPanel extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         if (!formValid()) {
+            System.out.println("Error");
             return;
         }
 
@@ -392,7 +401,7 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                     localPath,
                     taContent.getText().trim()
             );
-            
+
             int idA = repository.createArticle(article);
             article.setId(idA);
             /*Contributor check*/
@@ -525,20 +534,27 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                         int idPerson = repository.createPerson(newPerson);
                         newPerson.setId(idPerson);
                         selectedArticle.setCreator(newPerson);
+                        break;
                     }
                 }
             }
 
-            /*Contributor check*/
+            
+            /* Contributor check */
             String contributorsText = tfContributors.getText().trim();
-            List<Person> existingContributors = new ArrayList<>();
+
+            List<Person> existingContributors = repository.getArticleContributors(selectedArticle.getId());
+            List<Integer> existingContributorIds = existingContributors.stream()
+                    .map(Person::getId)
+                    .collect(Collectors.toList());
+
+            List<Person> peopleInDb = repository.selectPeople();
+
             List<Person> newContributors = new ArrayList<>();
-            List<Integer> contributorIds = new ArrayList<>();
+            List<Person> matchedContributors = new ArrayList<>();
 
             if (!contributorsText.isEmpty()) {
                 String[] names = contributorsText.split(", ");
-
-                List<Person> peopleInDb = repository.selectPeople();
 
                 for (String full_Name : names) {
                     String[] parts = full_Name.trim().split(" ");
@@ -552,7 +568,7 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                                 .findFirst();
 
                         if (match.isPresent()) {
-                            existingContributors.add(match.get());
+                            matchedContributors.add(match.get());
                         } else {
                             newContributors.add(new Person(name, surname));
                         }
@@ -560,25 +576,43 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                         System.err.println("Invalid contributor name: " + full_Name);
                     }
                 }
-
-                List<Integer> newContributorIds = repository.createPeople(newContributors);
-
-                contributorIds.addAll(
-                        existingContributors.stream()
-                                .map(Person::getId)
-                                .collect(Collectors.toList())
-                );
-                contributorIds.addAll(newContributorIds);
-                repository.insertArticleContributor(selectedArticle.getId(), contributorIds);
             }
+
+            List<Integer> newContributorIds = repository.createPeople(newContributors);
+
+            List<Integer> allNewIds = new ArrayList<>();
+            allNewIds.addAll(matchedContributors.stream()
+                    .map(Person::getId)
+                    .collect(Collectors.toList()));
+            allNewIds.addAll(newContributorIds);
+
+
+            List<Integer> toRemove = new ArrayList<>(existingContributorIds);
+            toRemove.removeAll(allNewIds);
+
+
+            List<Integer> toAdd = new ArrayList<>(allNewIds);
+            toAdd.removeAll(existingContributorIds);
+
+
+            if (!toRemove.isEmpty()) {
+                repository.deleteArticleContributor(selectedArticle.getId(), toRemove);
+            }
+
+
+            if (!toAdd.isEmpty()) {
+                repository.insertArticleContributor(selectedArticle.getId(), toAdd);
+            }
+
 
             List<Person> finalContributors = new ArrayList<>();
 
-            for (Integer id : contributorIds) {
+            for (Integer id : allNewIds) {
                 repository.selectPerson(id).ifPresent(finalContributors::add);
             }
 
             selectedArticle.setContributors(finalContributors);
+
             repository.updateArticle(selectedArticle.getId(), selectedArticle);
             model.setArticles(repository.selectArticles());
             clearForm();
@@ -726,6 +760,9 @@ public class EditArticlesPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lbContentError;
     private javax.swing.JLabel lbContributorsError;
     private javax.swing.JLabel lbCreatorError;
@@ -735,8 +772,8 @@ public class EditArticlesPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lbLinkError;
     private javax.swing.JLabel lbPicturePathError;
     private javax.swing.JLabel lbTitleError;
-    private javax.swing.JTextField taContent;
-    private javax.swing.JTextField taDescription;
+    private javax.swing.JTextArea taContent;
+    private javax.swing.JTextArea taDescription;
     private javax.swing.JTable tbArticles;
     private javax.swing.JTextField tfContributors;
     private javax.swing.JTextField tfCreator;
@@ -769,6 +806,8 @@ public class EditArticlesPanel extends javax.swing.JPanel {
             Optional<Article> opt = repository.selectArticle(id);
             if (opt.isPresent()) {
                 selectedArticle = opt.get();
+                List<Person> neo = repository.getArticleContributors(id);
+                selectedArticle.setContributors(neo);
                 fillForm(selectedArticle);
             }
         } catch (Exception exception) {
