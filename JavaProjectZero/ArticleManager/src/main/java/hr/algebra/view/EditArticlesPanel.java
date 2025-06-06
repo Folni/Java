@@ -805,11 +805,11 @@ public class EditArticlesPanel extends javax.swing.JPanel {
                 fillForm(selectedArticle);
             }
         } catch (Exception exception) {
+            exception.printStackTrace();
         }
     }
 
     private void fillForm(Article article) {
-        clearForm();
         tfTitle.setText(article.getTitle());
         tfLink.setText(article.getLink());
         tfPublishDate.setText(article.getPublishedDate().format(Article.DATE_FORMATTER));
@@ -823,9 +823,9 @@ public class EditArticlesPanel extends javax.swing.JPanel {
         tfContributors.setText(contributorsStr);
         taDescription.setText(article.getDescription());
         taContent.setText(article.getContent());
-        if (article.getPicturePath().isEmpty()) {
+        if (article.getPicturePath().equals(null)) {
             tfPicturePath.setText("");
-            lbIcon.setIcon(null);
+            lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/no_image.png")));
         }
 
         else{
