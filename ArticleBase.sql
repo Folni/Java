@@ -322,7 +322,27 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE getSaltByUsername
+    @Username NVARCHAR(50),
+    @PwdSalt NVARCHAR(256) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT @PwdSalt = PwdSalt
+    FROM User_
+    WHERE Username = @Username;
+
+    IF @PwdSalt IS NULL
+    BEGIN
+        SET @PwdSalt = '';
+    END
+END;
+GO
+
+
 /*Generate Admin*/
 insert into Person (Name,Surname,Email) values ('Admin', 'Admin', 'admin@algebra.hr')
+insert into User_ (Username,PwdHash,PwdSalt,PersonID) values ('admin','e2as+rFV/OFN2lRetJKIORIFl55iB8utxPgF1N9fBaI=','CW3G5mmRMGSyWKgycCFuSQ==',1)
 insert into Person (Name,Surname,Email) values ('John', 'Doe', 'jdoe@algebra.hr')
 

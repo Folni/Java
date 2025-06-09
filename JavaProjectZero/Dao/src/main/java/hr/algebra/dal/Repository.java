@@ -54,6 +54,8 @@ public interface Repository {
     
     int checkUser(User user) throws Exception;
     
+    String getSaltByUsername(String username) throws Exception;
+    
     /*Contributor crud*/
     void insertArticleContributor(int id, List<Integer> personID) throws Exception;
     

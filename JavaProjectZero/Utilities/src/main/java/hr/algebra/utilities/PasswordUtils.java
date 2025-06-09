@@ -17,6 +17,7 @@ public class PasswordUtils {
 
     // Helper class to hold the result
     public static class HashSalt {
+
         public final String hash;
         public final String salt;
 
@@ -44,5 +45,16 @@ public class PasswordUtils {
 
         return new HashSalt(hashBase64, saltBase64);
     }
-}
 
+    // Hash a password with an existing salt (used during login)
+    public static String hashPassword(String password, String saltBase64) throws NoSuchAlgorithmException {
+        byte[] saltBytes = Base64.getDecoder().decode(saltBase64);
+
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(saltBytes); // Add the decoded salt
+        byte[] hashBytes = md.digest(password.getBytes());
+
+        return Base64.getEncoder().encodeToString(hashBytes);
+    }
+
+}

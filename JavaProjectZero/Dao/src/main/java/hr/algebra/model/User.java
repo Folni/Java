@@ -13,15 +13,13 @@ import java.security.NoSuchAlgorithmException;
  * @author filip
  */
 public class User {
-    
+
     private int id;
     private String username;
     private String pwdHash;
     private String pwdSalt;
     private boolean isAdmin;
     private int personID;
-
-    
 
     public User(String username, String password) throws NoSuchAlgorithmException {
         this.username = username;
@@ -31,7 +29,18 @@ public class User {
         this.isAdmin = false;
     }
 
-    
+    public User(String username, String pwdHash, String pwdSalt) {
+        this.username = username;
+        this.pwdHash = pwdHash;
+        this.pwdSalt = pwdSalt;
+    }
+
+    public User() {
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
 
     public int getId() {
         return id;
@@ -69,7 +78,6 @@ public class User {
         return isAdmin;
     }
 
-
     public int getPersonID() {
         return personID;
     }
@@ -82,6 +90,5 @@ public class User {
     public String toString() {
         return "User{" + "id=" + id + ", username=" + username + ", isAdmin=" + isAdmin + '}';
     }
-    
-    
+
 }

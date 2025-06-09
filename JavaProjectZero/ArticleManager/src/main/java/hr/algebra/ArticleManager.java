@@ -4,7 +4,10 @@
  */
 package hr.algebra;
 
+import hr.algebra.model.User;
 import hr.algebra.view.EditArticlesPanel;
+import hr.algebra.view.LogInPanel;
+import hr.algebra.view.RegisterPanel;
 import hr.algebra.view.SaveArticlesPanel;
 import hr.algebra.view.UploadArticlesPanel;
 import java.awt.Component;
@@ -22,7 +25,8 @@ public class ArticleManager extends javax.swing.JFrame {
      */
     public ArticleManager() {
         initComponents();
-        initPanels();
+        initAuthenticationPanels();
+
     }
 
     /**
@@ -124,8 +128,36 @@ public class ArticleManager extends javax.swing.JFrame {
         tpContent.add(SAVE__ARTICLES, new SaveArticlesPanel(this));
     }
 
+    private void initUserPanels() {
+        tpContent.add(EDIT__ARTICLES, new EditArticlesPanel(this));
+        tpContent.add(SAVE__ARTICLES, new SaveArticlesPanel(this));
+    }
+
     /*Panel const*/
     private static final String SAVE__ARTICLES = "Save Articles";
     private static final String EDIT__ARTICLES = "Edit Articles";
     private static final String UPLOAD__ARTICLES = "Upload Articles";
+    private static final String LOG_IN = "Log-in";
+    private static final String REGISTER = "Register";
+
+    private void initAuthenticationPanels() {
+        tpContent.add(LOG_IN, new LogInPanel(this));
+        tpContent.add(REGISTER, new RegisterPanel(this));
+    }
+
+    private User currentUser;
+
+    public void onAuthenticationSuccess(User user) {
+        this.currentUser = user;
+
+        // Clear existing tabs
+        tpContent.removeAll();
+
+        if (user.getIsAdmin()) {
+            initPanels(); // Admin has access to all panels
+        } else {
+            initUserPanels(); // Regular user has limited access
+        }
+    }
+
 }
