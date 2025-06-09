@@ -133,7 +133,7 @@ public final class Article {
 
     @Override
     public String toString() {
-        return "Article{" + "id=" + id + ", title=" + title + '}';
+        return "id=" + id + ", title=" + title ;
     }
     
 

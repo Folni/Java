@@ -4,6 +4,7 @@
  */
 package hr.algebra.view;
 
+import hr.algebra.ArticleManager;
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.model.Article;
@@ -38,7 +39,10 @@ public class EditArticlesPanel extends javax.swing.JPanel {
     /**
      * Creates new form UploadArticlesPanel
      */
-    public EditArticlesPanel() {
+    private ArticleManager manager;
+
+    public EditArticlesPanel(ArticleManager manager) {
+        this.manager = manager;
         initComponents();
     }
 
@@ -824,13 +828,15 @@ public class EditArticlesPanel extends javax.swing.JPanel {
         taDescription.setText(article.getDescription());
         taContent.setText(article.getContent());
         if (article.getPicturePath().equals(null)) {
-            tfPicturePath.setText("");
+            tfPicturePath.setText(" ");
             lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/no_image.png")));
-        }
-
-        else{
+        } else {
             tfPicturePath.setText(article.getPicturePath());
             setIcon(lbIcon, new File(article.getPicturePath()));
         }
+    }
+
+    public void setContent(String content) {
+        taContent.setText(content);
     }
 }

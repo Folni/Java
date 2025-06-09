@@ -7,6 +7,9 @@ package hr.algebra;
 import hr.algebra.view.EditArticlesPanel;
 import hr.algebra.view.SaveArticlesPanel;
 import hr.algebra.view.UploadArticlesPanel;
+import java.awt.Component;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -86,16 +89,41 @@ public class ArticleManager extends javax.swing.JFrame {
         });
     }
 
+    // Inside ArticleManager
+    public void transferContent(String destination, String content) {
+        for (int i = 0; i < tpContent.getTabCount(); i++) {
+            if (tpContent.getTitleAt(i).equals(destination)) {
+                Component comp = tpContent.getComponentAt(i);
+
+                if (comp instanceof EditArticlesPanel) {
+                    ((EditArticlesPanel) comp).setContent(content);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void showTabByTitle(String title) {
+        for (int i = 0; i < tpContent.getTabCount(); i++) {
+            if (tpContent.getTitleAt(i).equals(title)) {
+                tpContent.setSelectedIndex(i);
+                return;
+            }
+        }
+
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane tpContent;
     // End of variables declaration//GEN-END:variables
 
     private void initPanels() {
-        tpContent.add(UPLOAD__ARTICLES, new UploadArticlesPanel());
-        tpContent.add(EDIT__ARTICLES, new EditArticlesPanel());
-        tpContent.add(SAVE__ARTICLES, new SaveArticlesPanel());
+        tpContent.add(UPLOAD__ARTICLES, new UploadArticlesPanel(this));
+        tpContent.add(EDIT__ARTICLES, new EditArticlesPanel(this));
+        tpContent.add(SAVE__ARTICLES, new SaveArticlesPanel(this));
     }
-    
+
     /*Panel const*/
     private static final String SAVE__ARTICLES = "Save Articles";
     private static final String EDIT__ARTICLES = "Edit Articles";

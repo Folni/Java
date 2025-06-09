@@ -4,17 +4,92 @@
  */
 package hr.algebra.view;
 
+import hr.algebra.ArticleManager;
+import hr.algebra.dal.Repository;
+import hr.algebra.dal.RepositoryFactory;
+import hr.algebra.model.Article;
+import hr.algebra.model.Person;
+import hr.algebra.utilities.MessageUtils;
+import hr.algebra.view.model.ArticleTableModel;
+import java.awt.Dimension;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
+import javax.swing.JDialog;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 /**
  *
  * @author filip
  */
 public class SaveArticlesPanel extends javax.swing.JPanel {
 
+    private boolean edited;
+
     /**
-     * Creates new form UploadArticlesPanel
+     * Creates new form SaveArticlesPanel
      */
-    public SaveArticlesPanel() {
+    private ArticleManager manager;
+    private JTable tbArticles;
+
+    public SaveArticlesPanel(ArticleManager manager) {
+        this.manager = manager;
         initComponents();
+        handleLookAndFeelMenu();
+    }
+
+    private Repository repository;
+    private ArticleTableModel model;
+
+    private Article selectedArticle = null;
+
+    private void initRepository() throws Exception {
+        repository = RepositoryFactory.getRepository();
+    }
+
+    private void initTable() throws Exception {
+        tbArticles = new javax.swing.JTable();
+        tbArticles.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{
+                    {null, null, null, null},
+                    {null, null, null, null},
+                    {null, null, null, null},
+                    {null, null, null, null}
+                },
+                new String[]{
+                    "Title 1", "Title 2", "Title 3", "Title 4"
+                }
+        ));
+        tbArticles.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbArticlesMouseClicked(evt);
+            }
+        });
+        tbArticles.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tbArticlesKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbArticles);
+
+        tbArticles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tbArticles.setAutoCreateRowSorter(true);
+        tbArticles.setRowHeight(25);
+        model = new ArticleTableModel(repository.selectArticles());
+        tbArticles.setModel(model);
     }
 
     /**
@@ -26,19 +101,277 @@ public class SaveArticlesPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        popUp = new javax.swing.JPopupMenu();
+        menuFile = new javax.swing.JMenu();
+        miNew = new javax.swing.JMenuItem();
+        miOpen = new javax.swing.JMenuItem();
+        miSave = new javax.swing.JMenuItem();
+        miSaveAs = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        miPageSetup = new javax.swing.JMenuItem();
+        miPrint = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        miExit = new javax.swing.JMenuItem();
+        menuHelp = new javax.swing.JMenu();
+        miAbout = new javax.swing.JMenuItem();
+        menuLF = new javax.swing.JMenu();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tpContent = new javax.swing.JTextPane();
+
+        popUp.setToolTipText("");
+
+        menuFile.setText("File");
+
+        miNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miNew.setText("New");
+        miNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miNewActionPerformed(evt);
+            }
+        });
+        menuFile.add(miNew);
+
+        miOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miOpen.setText("Open");
+        miOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miOpenActionPerformed(evt);
+            }
+        });
+        menuFile.add(miOpen);
+
+        miSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miSave.setText("Save");
+        miSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSaveActionPerformed(evt);
+            }
+        });
+        menuFile.add(miSave);
+
+        miSaveAs.setText("Save as");
+        miSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSaveAsActionPerformed(evt);
+            }
+        });
+        menuFile.add(miSaveAs);
+        menuFile.add(jSeparator1);
+
+        miPageSetup.setText("Page setup");
+        miPageSetup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miPageSetupActionPerformed(evt);
+            }
+        });
+        menuFile.add(miPageSetup);
+
+        miPrint.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miPrint.setText("Print");
+        miPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miPrintActionPerformed(evt);
+            }
+        });
+        menuFile.add(miPrint);
+        menuFile.add(jSeparator2);
+
+        miExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miExit.setText("Exit");
+        miExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miExitActionPerformed(evt);
+            }
+        });
+        menuFile.add(miExit);
+
+        popUp.add(menuFile);
+
+        menuHelp.setText("Help");
+
+        miAbout.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miAbout.setText("About");
+        miAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miAboutActionPerformed(evt);
+            }
+        });
+        menuHelp.add(miAbout);
+
+        popUp.add(menuHelp);
+
+        menuLF.setText("Look and feel");
+        popUp.add(menuLF);
+
+        setPreferredSize(new java.awt.Dimension(1192, 792));
+
+        tpContent.setComponentPopupMenu(popUp);
+        tpContent.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tpContentKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tpContent);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1192, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1192, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 768, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
+    private void miAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAboutActionPerformed
+        MessageUtils.showInformationMessage("Content saving function.", "Vresion 1.0");
+    }//GEN-LAST:event_miAboutActionPerformed
+
+    private void miPageSetupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miPageSetupActionPerformed
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.pageDialog(job.defaultPage());
+        try {
+            job.print();
+        } catch (PrinterException ex) {
+            Logger.getLogger(SaveArticlesPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_miPageSetupActionPerformed
+
+    private void miPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miPrintActionPerformed
+        PrinterJob job = PrinterJob.getPrinterJob();
+
+        if (job.printDialog()) {
+            try {
+                job.print();
+            } catch (PrinterException ex) {
+                Logger.getLogger(SaveArticlesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_miPrintActionPerformed
+
+    private void tpContentKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tpContentKeyReleased
+        edited = true;
+    }//GEN-LAST:event_tpContentKeyReleased
+
+    private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
+        if (edited) {
+            miSaveAs.doClick();
+        }
+        System.exit(0);
+    }//GEN-LAST:event_miExitActionPerformed
+
+    private void miNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNewActionPerformed
+        manager.showTabByTitle("Edit Articles");
+    }//GEN-LAST:event_miNewActionPerformed
+
+    private void miOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOpenActionPerformed
+        try {
+            initRepository();
+            initTable();
+        } catch (Exception exception) {
+        }
+    }//GEN-LAST:event_miOpenActionPerformed
+
+    private void miSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSaveAsActionPerformed
+        Article temp = new Article();
+        if(!edited && selectedArticle == null){
+            MessageUtils.showErrorMessage("Invalid", "You can't save nothing!");
+        }
+        manager.transferContent("Edit Articles", tpContent.getText());
+        manager.showTabByTitle("Edit Articles");
+        edited = false;
+    }//GEN-LAST:event_miSaveAsActionPerformed
+
+    private void miSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSaveActionPerformed
+        if(selectedArticle != null){
+            selectedArticle.setContent(tpContent.getText());
+            try {
+                repository.updateArticle(selectedArticle.getId(), selectedArticle);
+            } catch (Exception ex) {
+                Logger.getLogger(SaveArticlesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else if(edited){
+            miSaveAs.doClick();
+        }
+        else {
+            MessageUtils.showErrorMessage("Invalid", "You can't save nothing!");
+        } 
+        tpContent.setText("");
+        selectedArticle = null;
+        edited = false;
+    }//GEN-LAST:event_miSaveActionPerformed
+
+    private void tbArticlesKeyReleased(java.awt.event.KeyEvent evt) {                                       
+        selectArticle();
+    }                                      
+
+    private void tbArticlesMouseClicked(java.awt.event.MouseEvent evt) {                                        
+        selectArticle();
+    }
+    
+    private void selectArticle() {
+        int selectedRow = tbArticles.getSelectedRow();
+        int rowIndex = tbArticles.convertRowIndexToModel(selectedRow);
+
+        int id = (int) model.getValueAt(rowIndex, 0);
+
+        try {
+            Optional<Article> opt = repository.selectArticle(id);
+            if (opt.isPresent()) {
+                selectedArticle = opt.get();
+                List<Person> neo = repository.getArticleContributors(id);
+                selectedArticle.setContributors(neo);
+                tpContent.setText(selectedArticle.getContent());
+                jScrollPane1.setViewportView(tpContent);
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JMenu menuFile;
+    private javax.swing.JMenu menuHelp;
+    private javax.swing.JMenu menuLF;
+    private javax.swing.JMenuItem miAbout;
+    private javax.swing.JMenuItem miExit;
+    private javax.swing.JMenuItem miNew;
+    private javax.swing.JMenuItem miOpen;
+    private javax.swing.JMenuItem miPageSetup;
+    private javax.swing.JMenuItem miPrint;
+    private javax.swing.JMenuItem miSave;
+    private javax.swing.JMenuItem miSaveAs;
+    private javax.swing.JPopupMenu popUp;
+    private javax.swing.JTextPane tpContent;
     // End of variables declaration//GEN-END:variables
+
+    /*DANGER - FIX*/
+    private void handleLookAndFeelMenu() {
+        ButtonGroup bg = new ButtonGroup();
+       Arrays.asList(UIManager.getInstalledLookAndFeels()).forEach(info -> {
+           JRadioButtonMenuItem mi =  new JRadioButtonMenuItem(info.getName());
+           bg.add(mi);
+           menuLF.add(mi);
+           mi.setSelected("Nimbus".equals(info.getName()));
+           mi.addActionListener(e -> {
+               try {
+                   
+                   UIManager.setLookAndFeel(info.getClassName());
+                   SwingUtilities.updateComponentTreeUI(SwingUtilities.getWindowAncestor(menuLF));
+               } catch (Exception ex) {
+                   Logger.getLogger(SaveArticlesPanel.class.getName()).log(Level.SEVERE, null, ex);
+               } 
+           });
+       });
+    }
 }
