@@ -4,10 +4,14 @@
  */
 package hr.algebra.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 /**
  *
  * @author filip
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public final class Person implements Comparable<Person> {
 
     private int id;

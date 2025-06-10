@@ -7,11 +7,17 @@ package hr.algebra.model;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
  * @author daniel.bele
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public final class Article {
     
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -20,9 +26,14 @@ public final class Article {
     private String title;
     private String link;
     private String description;
+    @XmlElement(name = "publisheddate")
+    @XmlJavaTypeAdapter(DateAdapter.class)
     private LocalDateTime publishedDate;
     private Person creator;
+    @XmlElementWrapper
+    @XmlElement(name = "contributors")
     private List<Person> contributors;
+    @XmlElement(name = "picturepath")
     private String picturePath;
     private String content;
 

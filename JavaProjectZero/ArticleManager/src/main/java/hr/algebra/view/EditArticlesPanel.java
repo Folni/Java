@@ -8,10 +8,12 @@ import hr.algebra.ArticleManager;
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.model.Article;
+import hr.algebra.model.ArticleArchive;
 import hr.algebra.model.Person;
 import hr.algebra.model.PersonSelectable;
 import hr.algebra.utilities.FileUtils;
 import hr.algebra.utilities.IconUtils;
+import hr.algebra.utilities.JAXBUtils;
 import hr.algebra.utilities.MessageUtils;
 import hr.algebra.view.model.ArticleTableModel;
 import java.io.File;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
+import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -60,6 +63,7 @@ public class EditArticlesPanel extends javax.swing.JPanel implements PersonSelec
 
         menuSelectPeople = new javax.swing.JPopupMenu();
         miSelect = new javax.swing.JMenuItem();
+        miExport = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbArticles = new javax.swing.JTable();
         lbIcon = new javax.swing.JLabel();
@@ -100,6 +104,14 @@ public class EditArticlesPanel extends javax.swing.JPanel implements PersonSelec
             }
         });
         menuSelectPeople.add(miSelect);
+
+        miExport.setText("Export");
+        miExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miExportActionPerformed(evt);
+            }
+        });
+        menuSelectPeople.add(miExport);
 
         setComponentPopupMenu(menuSelectPeople);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -708,6 +720,25 @@ public class EditArticlesPanel extends javax.swing.JPanel implements PersonSelec
         }
     }//GEN-LAST:event_miSelectActionPerformed
 
+    private void miExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExportActionPerformed
+        List<Article> listA = null;
+        try {
+            listA = repository.selectArticles();
+        } catch (Exception ex) {
+            Logger.getLogger(EditArticlesPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (listA != null) {
+            try {
+                JAXBUtils.save(new ArticleArchive(listA), "src/main/resources/articlearchive.xml");
+            } catch (JAXBException ex) {
+                Logger.getLogger(EditArticlesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            MessageUtils.showErrorMessage("Error", "Failed to export articles. See logs for details.");
+        }
+    }//GEN-LAST:event_miExportActionPerformed
+
     private void setIcon(JLabel label, File file) {
         try {
             label.setIcon(IconUtils.createIcon(file, label.getWidth(), label.getHeight()));
@@ -833,6 +864,7 @@ public class EditArticlesPanel extends javax.swing.JPanel implements PersonSelec
     private javax.swing.JLabel lbPicturePathError;
     private javax.swing.JLabel lbTitleError;
     private javax.swing.JPopupMenu menuSelectPeople;
+    private javax.swing.JMenuItem miExport;
     private javax.swing.JMenuItem miSelect;
     private javax.swing.JTextArea taContent;
     private javax.swing.JTextArea taDescription;
@@ -906,7 +938,7 @@ public class EditArticlesPanel extends javax.swing.JPanel implements PersonSelec
 
     @Override
     public boolean selectPerson(ArrayList<Person> person) {
- 
+
         selectedPeople.clear();
 
         boolean addedSuccessfully = selectedPeople.addAll(person);
@@ -915,7 +947,7 @@ public class EditArticlesPanel extends javax.swing.JPanel implements PersonSelec
             if (selectedPeople.size() == 1) {
                 Person creator = selectedPeople.get(0);
                 tfCreator.setText(creator.getName() + " " + creator.getSurname());
-            } else {        
+            } else {
                 List<Person> contributors = selectedPeople;
                 String contributorsStr = contributors.stream()
                         .map(p -> p.getName() + " " + p.getSurname())
@@ -923,11 +955,11 @@ public class EditArticlesPanel extends javax.swing.JPanel implements PersonSelec
 
                 tfContributors.setText(contributorsStr);
             }
-            return true; 
+            return true;
         } else {
             tfCreator.setText("");
             tfContributors.setText("");
-            return false; 
+            return false;
         }
     }
 }
