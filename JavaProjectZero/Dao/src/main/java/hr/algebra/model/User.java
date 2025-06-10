@@ -35,11 +35,13 @@ public class User {
         this.pwdSalt = pwdSalt;
     }
 
-    public User() {
+    public User(int id, boolean isAdmin) {
+        this.id = id;
+        this.isAdmin = isAdmin;
     }
 
-    public void setIsAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
+    
+    public User() {
     }
 
     public int getId() {

@@ -67,6 +67,7 @@ public class SqlRepository implements Repository {
     private static final String DELETE_USER = "{ CALL deleteUser (?) }";
     private static final String GETSALTBYUSERNAME = "{ CALL getSaltByUsername (?, ?) }";
     private static final String CHECK_USER = "{ CALL checkUser (?,?,?,?) }";
+    private static final String CHECKIFUSERISADMIN = "{ CALL checkIfUserIsAdmin (?,?) }";
 
     /*ArticleContributor crud const*/
     private static final String INSERTARTICLECONTRIBUTOR = "{ CALL insertArticleContributor (?,?) }";
@@ -468,6 +469,19 @@ public class SqlRepository implements Repository {
 
             stmt.executeUpdate();
             return stmt.getString(PWDSALT);
+        }
+    }
+    
+    @Override
+    public boolean checkIfUserIsAdmin(int userID) throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CHECKIFUSERISADMIN)) {
+
+            stmt.setInt(ID_USER, userID);
+            stmt.registerOutParameter(ISADMIN, Types.BOOLEAN);
+
+            stmt.executeUpdate();
+            return stmt.getBoolean(ISADMIN);
         }
     }
 }

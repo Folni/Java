@@ -132,7 +132,7 @@ public class UploadArticlesPanel extends javax.swing.JPanel {
         try {
             List<Article> articles = repository.selectArticles();
 
-            // Delete article contributors
+
             for (Article article : articles) {
                 try {
                     List<Person> people = repository.getArticleContributors(article.getId());
@@ -147,7 +147,7 @@ public class UploadArticlesPanel extends javax.swing.JPanel {
                 }
             }
 
-            // Delete articles
+
             for (Article article : articles) {
                 try {
                     repository.deleteArticle(article.getId());

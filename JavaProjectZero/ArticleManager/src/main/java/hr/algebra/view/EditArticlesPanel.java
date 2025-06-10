@@ -9,6 +9,7 @@ import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.model.Article;
 import hr.algebra.model.Person;
+import hr.algebra.model.PersonSelectable;
 import hr.algebra.utilities.FileUtils;
 import hr.algebra.utilities.IconUtils;
 import hr.algebra.utilities.MessageUtils;
@@ -20,8 +21,10 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +37,7 @@ import javax.swing.text.JTextComponent;
  *
  * @author filip
  */
-public class EditArticlesPanel extends javax.swing.JPanel {
+public class EditArticlesPanel extends javax.swing.JPanel implements PersonSelectable {
 
     /**
      * Creates new form UploadArticlesPanel
@@ -55,6 +58,8 @@ public class EditArticlesPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        menuSelectPeople = new javax.swing.JPopupMenu();
+        miSelect = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbArticles = new javax.swing.JTable();
         lbIcon = new javax.swing.JLabel();
@@ -88,6 +93,15 @@ public class EditArticlesPanel extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         taDescription = new javax.swing.JTextArea();
 
+        miSelect.setText("Select people");
+        miSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSelectActionPerformed(evt);
+            }
+        });
+        menuSelectPeople.add(miSelect);
+
+        setComponentPopupMenu(menuSelectPeople);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
@@ -646,6 +660,54 @@ public class EditArticlesPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    private void miSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSelectActionPerformed
+        java.awt.Frame parent = (java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        PersonSelectable personSelectable = (PersonSelectable) this;
+
+        // Creator check
+        Person creator = null;
+        String fullName = tfCreator.getText().trim();
+        String[] nameParts = fullName.split(" ");
+
+        List<Person> creators = new ArrayList<>();
+
+        if (nameParts.length >= 2) {
+            String inputName = nameParts[0];
+            String inputSurname = nameParts[1];
+
+            List<Person> people;
+            try {
+                people = repository.selectPeople();
+
+                Optional<Person> existing = people.stream()
+                        .filter(p -> p.getName().equalsIgnoreCase(inputName)
+                        && p.getSurname().equalsIgnoreCase(inputSurname))
+                        .findFirst();
+
+                if (existing.isPresent()) {
+                    creator = existing.get();
+                } else {
+                    Person newPerson = new Person(inputName, inputSurname);
+                    int idPerson = repository.createPerson(newPerson);
+                    newPerson.setId(idPerson);
+                    creator = newPerson;
+                }
+
+                creators.add(creator);
+
+            } catch (Exception ex) {
+                Logger.getLogger(EditArticlesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        try {
+            // Now pass both lists to the dialog
+            new PeopleDragAndDrop(parent, true, personSelectable, creators).setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(EditArticlesPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_miSelectActionPerformed
+
     private void setIcon(JLabel label, File file) {
         try {
             label.setIcon(IconUtils.createIcon(file, label.getWidth(), label.getHeight()));
@@ -662,6 +724,7 @@ public class EditArticlesPanel extends javax.swing.JPanel {
     private ArticleTableModel model;
 
     private Article selectedArticle;
+    private ArrayList<Person> selectedPeople = new ArrayList();
 
     private void init() {
         try {
@@ -760,7 +823,6 @@ public class EditArticlesPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lbContentError;
     private javax.swing.JLabel lbContributorsError;
     private javax.swing.JLabel lbCreatorError;
@@ -770,6 +832,8 @@ public class EditArticlesPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lbLinkError;
     private javax.swing.JLabel lbPicturePathError;
     private javax.swing.JLabel lbTitleError;
+    private javax.swing.JPopupMenu menuSelectPeople;
+    private javax.swing.JMenuItem miSelect;
     private javax.swing.JTextArea taContent;
     private javax.swing.JTextArea taDescription;
     private javax.swing.JTable tbArticles;
@@ -838,5 +902,32 @@ public class EditArticlesPanel extends javax.swing.JPanel {
 
     public void setContent(String content) {
         taContent.setText(content);
+    }
+
+    @Override
+    public boolean selectPerson(ArrayList<Person> person) {
+ 
+        selectedPeople.clear();
+
+        boolean addedSuccessfully = selectedPeople.addAll(person);
+
+        if (addedSuccessfully) {
+            if (selectedPeople.size() == 1) {
+                Person creator = selectedPeople.get(0);
+                tfCreator.setText(creator.getName() + " " + creator.getSurname());
+            } else {        
+                List<Person> contributors = selectedPeople;
+                String contributorsStr = contributors.stream()
+                        .map(p -> p.getName() + " " + p.getSurname())
+                        .collect(Collectors.joining(", "));
+
+                tfContributors.setText(contributorsStr);
+            }
+            return true; 
+        } else {
+            tfCreator.setText("");
+            tfContributors.setText("");
+            return false; 
+        }
     }
 }

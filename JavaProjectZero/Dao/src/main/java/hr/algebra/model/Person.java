@@ -8,8 +8,8 @@ package hr.algebra.model;
  *
  * @author filip
  */
-public final class Person {
-    
+public final class Person implements Comparable<Person> {
+
     private int id;
     private String name;
     private String surname;
@@ -27,7 +27,7 @@ public final class Person {
         this.surname = surname;
         this.email = email;
     }
-    
+
     public Person(String name, String surname) {
         this.name = name;
         this.surname = surname;
@@ -70,8 +70,36 @@ public final class Person {
 
     @Override
     public String toString() {
-        return  name + " " + surname;
+        return name + " " + surname;
     }
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Person other = (Person) obj;
+        return this.id == other.id;
+    }
+
+    @Override
+    public int compareTo(Person other) {
+      return Integer.compare(this.id, other.id);
+    }
+
+
     
 }

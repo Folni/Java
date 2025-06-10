@@ -121,28 +121,29 @@ public class LogInPanel extends javax.swing.JPanel {
         String password = new String(passwordChars);
 
         try {
-            // 1. Get salt for the username
+
             String salt = repository.getSaltByUsername(username);
             if (salt == null || salt.isEmpty()) {
                 MessageUtils.showErrorMessage("Login failed", "User does not exist.");
                 return;
             }
 
-            // 2. Hash the input password with retrieved salt
+
             String hashedPassword = hashPassword(password, salt);
 
-            // 3. Construct a User object with username, hashedPassword, and salt
-            User user = new User(username, hashedPassword, salt); // Add this constructor
 
-            // 4. Check user existence
+            User user = new User(username, hashedPassword, salt); 
+
+
             int userId = repository.checkUser(user);
             if (userId != -1) {
-                user.setId(userId); // Optionally track ID
-                if(userId == 1){
-                    user.setIsAdmin(true);
-                    manager.onAuthenticationSuccess(user);
+                user.setId(userId); 
+                boolean isAdmin= repository.checkIfUserIsAdmin(userId);
+                User userAuthenticated = new User (userId, isAdmin);
+                if(isAdmin == true){
+                    manager.onAuthenticationSuccess(userAuthenticated);
                 }else{
-                    manager.onAuthenticationSuccess(user);
+                    manager.onAuthenticationSuccess(userAuthenticated);
                 }
             } else {
                 clearForm();
@@ -153,7 +154,7 @@ public class LogInPanel extends javax.swing.JPanel {
             Logger.getLogger(LogInPanel.class.getName()).log(Level.SEVERE, null, ex);
             MessageUtils.showErrorMessage("Error", "Unexpected error occurred.");
         } finally {
-            Arrays.fill(passwordChars, '0'); // Clear password from memory
+            Arrays.fill(passwordChars, '0'); 
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

@@ -340,9 +340,26 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE checkIfUserIsAdmin
+    @IDUser INT,
+    @IsAdmin BIT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT @IsAdmin = 
+        CASE 
+            WHEN IsAdmin = 1 THEN 1
+            ELSE 0
+        END
+    FROM User_
+    WHERE IDUser = @IDUser;
+END;
+GO
+
 
 /*Generate Admin*/
 insert into Person (Name,Surname,Email) values ('Admin', 'Admin', 'admin@algebra.hr')
-insert into User_ (Username,PwdHash,PwdSalt,PersonID) values ('admin','e2as+rFV/OFN2lRetJKIORIFl55iB8utxPgF1N9fBaI=','CW3G5mmRMGSyWKgycCFuSQ==',1)
+insert into User_ (Username,PwdHash,PwdSalt,PersonID,IsAdmin) values ('admin','e2as+rFV/OFN2lRetJKIORIFl55iB8utxPgF1N9fBaI=','CW3G5mmRMGSyWKgycCFuSQ==',1,1)
 insert into Person (Name,Surname,Email) values ('John', 'Doe', 'jdoe@algebra.hr')
 
