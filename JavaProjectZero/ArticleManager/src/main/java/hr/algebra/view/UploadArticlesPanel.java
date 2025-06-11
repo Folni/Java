@@ -141,6 +141,7 @@ public class UploadArticlesPanel extends javax.swing.JPanel {
                             .collect(Collectors.toList());
 
                     repository.deleteArticleContributor(article.getId(), contributorIds);
+                    repository.deleteArticle(article.getId());
                 } catch (Exception ex) {
                     Logger.getLogger(UploadArticlesPanel.class.getName()).log(Level.SEVERE,
                             "Failed to delete contributors for article ID: " + article.getId(), ex);
@@ -148,14 +149,14 @@ public class UploadArticlesPanel extends javax.swing.JPanel {
             }
 
 
-            for (Article article : articles) {
+            /*for (Article article : articles) {
                 try {
                     repository.deleteArticle(article.getId());
                 } catch (Exception ex) {
                     Logger.getLogger(UploadArticlesPanel.class.getName()).log(Level.SEVERE,
                             "Failed to delete article ID: " + article.getId(), ex);
                 }
-            }
+            }*/
 
             loadModel();
         } catch (Exception e) {

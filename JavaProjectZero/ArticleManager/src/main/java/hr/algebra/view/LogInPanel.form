@@ -29,7 +29,7 @@
               </Group>
               <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jButton1" pref="323" max="32767" attributes="0"/>
+                  <Component id="btnLogIn" pref="323" max="32767" attributes="0"/>
                   <Component id="tfUsername" max="32767" attributes="0"/>
                   <Component id="pfPassword" max="32767" attributes="0"/>
               </Group>
@@ -58,7 +58,7 @@
                   <Component id="lbPasswordError" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="90" max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" pref="38" max="-2" attributes="0"/>
+              <Component id="btnLogIn" min="-2" pref="38" max="-2" attributes="0"/>
               <EmptySpace pref="191" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -79,12 +79,12 @@
     </Component>
     <Component class="javax.swing.JPasswordField" name="pfPassword">
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnLogIn">
       <Properties>
         <Property name="text" type="java.lang.String" value="Log-In"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogInActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lbUsernameError">

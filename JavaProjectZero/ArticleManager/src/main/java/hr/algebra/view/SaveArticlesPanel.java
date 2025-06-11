@@ -11,7 +11,6 @@ import hr.algebra.model.Article;
 import hr.algebra.model.Person;
 import hr.algebra.utilities.MessageUtils;
 import hr.algebra.view.model.ArticleTableModel;
-import java.awt.Dimension;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.Arrays;
@@ -20,14 +19,11 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
-import javax.swing.JDialog;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -46,7 +42,7 @@ public class SaveArticlesPanel extends javax.swing.JPanel {
     public SaveArticlesPanel(ArticleManager manager) {
         this.manager = manager;
         initComponents();
-        handleLookAndFeelMenu();
+        
     }
 
     private Repository repository;
@@ -355,23 +351,5 @@ public class SaveArticlesPanel extends javax.swing.JPanel {
     private javax.swing.JTextPane tpContent;
     // End of variables declaration//GEN-END:variables
 
-    /*DANGER - FIX*/
-    private void handleLookAndFeelMenu() {
-        ButtonGroup bg = new ButtonGroup();
-       Arrays.asList(UIManager.getInstalledLookAndFeels()).forEach(info -> {
-           JRadioButtonMenuItem mi =  new JRadioButtonMenuItem(info.getName());
-           bg.add(mi);
-           menuLF.add(mi);
-           mi.setSelected("Nimbus".equals(info.getName()));
-           mi.addActionListener(e -> {
-               try {
-                   
-                   UIManager.setLookAndFeel(info.getClassName());
-                   SwingUtilities.updateComponentTreeUI(SwingUtilities.getWindowAncestor(menuLF));
-               } catch (Exception ex) {
-                   Logger.getLogger(SaveArticlesPanel.class.getName()).log(Level.SEVERE, null, ex);
-               } 
-           });
-       });
-    }
+   
 }

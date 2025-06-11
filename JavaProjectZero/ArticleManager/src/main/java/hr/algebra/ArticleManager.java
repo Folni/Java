@@ -11,8 +11,6 @@ import hr.algebra.view.RegisterPanel;
 import hr.algebra.view.SaveArticlesPanel;
 import hr.algebra.view.UploadArticlesPanel;
 import java.awt.Component;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 /**
  *

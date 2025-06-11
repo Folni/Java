@@ -23,10 +23,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -923,8 +921,8 @@ public class EditArticlesPanel extends javax.swing.JPanel implements PersonSelec
         tfContributors.setText(contributorsStr);
         taDescription.setText(article.getDescription());
         taContent.setText(article.getContent());
-        if (article.getPicturePath().equals(null)) {
-            tfPicturePath.setText(" ");
+        if (article.getPicturePath() == null) {
+            tfPicturePath.setText("");
             lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/no_image.png")));
         } else {
             tfPicturePath.setText(article.getPicturePath());

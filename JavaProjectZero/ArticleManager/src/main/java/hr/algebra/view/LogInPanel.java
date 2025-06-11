@@ -10,7 +10,6 @@ import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.model.User;
 import hr.algebra.utilities.MessageUtils;
 import static hr.algebra.utilities.PasswordUtils.hashPassword;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -48,7 +47,7 @@ public class LogInPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         tfUsername = new javax.swing.JTextField();
         pfPassword = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        btnLogIn = new javax.swing.JButton();
         lbUsernameError = new javax.swing.JLabel();
         lbPasswordError = new javax.swing.JLabel();
 
@@ -58,10 +57,10 @@ public class LogInPanel extends javax.swing.JPanel {
 
         jLabel2.setText("Password:");
 
-        jButton1.setText("Log-In");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnLogIn.setText("Log-In");
+        btnLogIn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnLogInActionPerformed(evt);
             }
         });
 
@@ -82,7 +81,7 @@ public class LogInPanel extends javax.swing.JPanel {
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(74, 74, 74)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                    .addComponent(btnLogIn, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                     .addComponent(tfUsername)
                     .addComponent(pfPassword))
                 .addGap(52, 52, 52)
@@ -105,12 +104,12 @@ public class LogInPanel extends javax.swing.JPanel {
                     .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbPasswordError))
                 .addGap(90, 90, 90)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(191, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnLogInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogInActionPerformed
         if (!formValid()) {
             MessageUtils.showErrorMessage("Error", "Incorrect input!");
             return;
@@ -156,7 +155,7 @@ public class LogInPanel extends javax.swing.JPanel {
         } finally {
             Arrays.fill(passwordChars, '0'); 
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnLogInActionPerformed
 
     private List<JTextComponent> validationFields;
     private List<JLabel> errorLabels;
@@ -205,7 +204,7 @@ public class LogInPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnLogIn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lbPasswordError;
