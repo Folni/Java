@@ -57,6 +57,8 @@ Installation
 
         Navigate to the location of your downloaded JDBC driver file and add it.
 
+    Make sure JavaProjectZero/Dao/src/main/resources/config/db.properties and .../repository.properties are correctly configured to your SQL database!!!
+
     Build and run the application:
 
         Right-click the project in NetBeans.
